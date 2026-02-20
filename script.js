@@ -9,7 +9,7 @@ const options = {
 const getWeather = (city) => {
   cityName.innerHTML = city
   fetch(
-    'https://weather-by-api-ninjas.p.rapidapi.com/v1/weather?city=' + city,
+    'http://api.openweathermap.org/data/2.5/weatherappid=d6cc65f12112edcf4321e182003112db&q=' + city,
     options
   )
     .then(response => response.json())
@@ -212,6 +212,7 @@ const getWeather = (city) => {
 
   // };
   // }
+
 
 
 
