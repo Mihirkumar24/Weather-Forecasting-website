@@ -3,292 +3,516 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>Weather app</title>
-    <link
-      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css"
-      rel="stylesheet"
-      integrity="sha384-GLhlTQ8iRABdZLl6O3oVMWSktQOp6b7In1Zl3/Jr59b6EGGoI1aFkw7cmDA6j6gD"
-      crossorigin="anonymous"
-    />
-    <link rel="stylesheet" href="bg.css">
+    <title>Weather App</title>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&family=Playfair+Display:wght@700&display=swap" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet"
+      integrity="sha384-GLhlTQ8iRABdZLl6O3oVMWSktQOp6b7In1Zl3/Jr59b6EGGoI1aFkw7cmDA6j6gD" crossorigin="anonymous"/>
+
+    <style>
+      :root {
+        --sky1: #0f2027;
+        --sky2: #203a43;
+        --sky3: #2c5364;
+        --glass-bg: rgba(255, 255, 255, 0.10);
+        --glass-border: rgba(255, 255, 255, 0.20);
+        --glass-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+        --accent: #64dfdf;
+        --accent2: #f7c59f;
+        --text-primary: #ffffff;
+        --text-secondary: rgba(255,255,255,0.7);
+        --card-hover: rgba(255,255,255,0.18);
+      }
+
+      * { box-sizing: border-box; margin: 0; padding: 0; }
+
+      body {
+        font-family: 'Outfit', sans-serif;
+        min-height: 100vh;
+        background: linear-gradient(135deg, var(--sky1) 0%, var(--sky2) 50%, var(--sky3) 100%);
+        background-attachment: fixed;
+        color: var(--text-primary);
+        overflow-x: hidden;
+      }
+
+      body::before, body::after {
+        content: '';
+        position: fixed;
+        border-radius: 50%;
+        filter: blur(80px);
+        opacity: 0.25;
+        pointer-events: none;
+        animation: float 12s ease-in-out infinite alternate;
+        z-index: 0;
+      }
+      body::before {
+        width: 500px; height: 500px;
+        background: radial-gradient(circle, #48cae4, #0077b6);
+        top: -100px; left: -100px;
+      }
+      body::after {
+        width: 400px; height: 400px;
+        background: radial-gradient(circle, #f7c59f, #ef476f);
+        bottom: -100px; right: -100px;
+        animation-delay: -6s;
+      }
+
+      @keyframes float {
+        0%   { transform: translate(0, 0) scale(1); }
+        100% { transform: translate(40px, 40px) scale(1.1); }
+      }
+
+      .stars {
+        position: fixed;
+        top: 0; left: 0;
+        width: 100%; height: 100%;
+        pointer-events: none;
+        z-index: 0;
+        overflow: hidden;
+      }
+      .star {
+        position: absolute;
+        background: white;
+        border-radius: 50%;
+        animation: twinkle 3s ease-in-out infinite;
+      }
+      @keyframes twinkle {
+        0%, 100% { opacity: 0.2; transform: scale(1); }
+        50%       { opacity: 1;   transform: scale(1.4); }
+      }
+
+      .container { position: relative; z-index: 1; padding-top: 2rem; padding-bottom: 3rem; }
+
+      /* Search */
+      .search-wrapper {
+        max-width: 600px;
+        margin: 0 auto 2.5rem;
+        position: relative;
+      }
+      .search-wrapper input {
+        background: rgba(255,255,255,0.12);
+        border: 1.5px solid var(--glass-border);
+        color: white;
+        border-radius: 50px;
+        padding: 14px 130px 14px 24px;
+        font-size: 1rem;
+        font-family: 'Outfit', sans-serif;
+        width: 100%;
+        backdrop-filter: blur(10px);
+        transition: all 0.3s ease;
+        outline: none;
+      }
+      .search-wrapper input::placeholder { color: rgba(255,255,255,0.5); }
+      .search-wrapper input:focus {
+        border-color: var(--accent);
+        background: rgba(255,255,255,0.18);
+        box-shadow: 0 0 0 3px rgba(100, 223, 223, 0.2);
+      }
+      .search-wrapper button {
+        position: absolute;
+        right: 6px; top: 6px; bottom: 6px;
+        background: linear-gradient(135deg, var(--accent), #48cae4);
+        border: none;
+        border-radius: 50px;
+        padding: 0 28px;
+        color: #0f2027;
+        font-weight: 700;
+        font-family: 'Outfit', sans-serif;
+        font-size: 0.9rem;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        letter-spacing: 0.5px;
+      }
+      .search-wrapper button:hover {
+        transform: scale(1.05);
+        box-shadow: 0 4px 20px rgba(100,223,223,0.5);
+      }
+
+      /* Title */
+      .weather-title {
+        font-family: 'Playfair Display', serif;
+        font-size: clamp(2rem, 5vw, 3.2rem);
+        text-align: center;
+        margin-bottom: 2.5rem;
+        color: white;
+        text-shadow: 0 2px 20px rgba(0,0,0,0.4);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 16px;
+        flex-wrap: wrap;
+      }
+      .weather-title img { filter: drop-shadow(0 4px 10px rgba(0,0,0,0.3)); }
+      .weather-title span { color: var(--accent); }
+
+      /* Glass Cards */
+      .glass-card {
+        background: var(--glass-bg);
+        border: 1px solid var(--glass-border);
+        border-radius: 24px;
+        backdrop-filter: blur(16px);
+        -webkit-backdrop-filter: blur(16px);
+        box-shadow: var(--glass-shadow);
+        overflow: hidden;
+        transition: transform 0.3s ease, box-shadow 0.3s ease, background 0.3s ease;
+        height: 100%;
+      }
+      .glass-card:hover {
+        transform: translateY(-6px);
+        background: var(--card-hover);
+        box-shadow: 0 16px 48px rgba(0,0,0,0.4);
+      }
+
+      .card-header-custom {
+        padding: 18px 24px;
+        border-bottom: 1px solid var(--glass-border);
+        display: flex;
+        align-items: center;
+        gap: 10px;
+      }
+      .card-icon { font-size: 1.6rem; line-height: 1; }
+      .card-header-custom h4 {
+        font-size: 1rem;
+        font-weight: 600;
+        letter-spacing: 1px;
+        text-transform: uppercase;
+        color: var(--text-secondary);
+        margin: 0;
+      }
+
+      .card-temp .card-header-custom     { background: linear-gradient(135deg, rgba(100,223,223,0.15), transparent); }
+      .card-humidity .card-header-custom { background: linear-gradient(135deg, rgba(72,202,228,0.15), transparent); }
+      .card-wind .card-header-custom     { background: linear-gradient(135deg, rgba(247,197,159,0.15), transparent); }
+
+      .card-body-custom { padding: 24px; }
+
+      .big-value {
+        font-size: clamp(2.8rem, 6vw, 4rem);
+        font-weight: 700;
+        line-height: 1;
+        margin-bottom: 4px;
+      }
+      .big-value small { font-size: 1.2rem; font-weight: 300; color: var(--text-secondary); }
+      .card-temp .big-value     { color: var(--accent); }
+      .card-humidity .big-value { color: #48cae4; }
+      .card-wind .big-value     { color: var(--accent2); }
+
+      .info-list { list-style: none; padding: 0; margin: 16px 0 20px; }
+      .info-list li {
+        color: var(--text-secondary);
+        font-size: 0.9rem;
+        padding: 6px 0;
+        border-bottom: 1px solid rgba(255,255,255,0.06);
+        display: flex;
+        justify-content: space-between;
+      }
+      .info-list li:last-child { border-bottom: none; }
+      .info-list li strong { color: white; font-weight: 500; }
+
+      .more-btn {
+        display: block; width: 100%; padding: 12px;
+        border-radius: 50px;
+        border: 1.5px solid var(--glass-border);
+        background: transparent;
+        color: white;
+        font-family: 'Outfit', sans-serif;
+        font-size: 0.9rem; font-weight: 500;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        letter-spacing: 0.5px;
+      }
+      .card-temp .more-btn:hover     { background: rgba(100,223,223,0.2); border-color: var(--accent); color: var(--accent); }
+      .card-humidity .more-btn:hover { background: rgba(72,202,228,0.2); border-color: #48cae4; color: #48cae4; }
+      .card-wind .more-btn:hover     { background: rgba(247,197,159,0.2); border-color: var(--accent2); color: var(--accent2); }
+
+      /* Section title */
+      .section-title {
+        font-family: 'Playfair Display', serif;
+        font-size: clamp(1.5rem, 3vw, 2rem);
+        text-align: center;
+        color: white;
+        margin: 3rem 0 1rem;
+        position: relative;
+      }
+      .section-title::after {
+        content: '';
+        display: block;
+        width: 60px; height: 3px;
+        background: linear-gradient(90deg, var(--accent), #48cae4);
+        border-radius: 2px;
+        margin: 12px auto 0;
+      }
+
+      /* Table */
+      .table-wrapper {
+        background: var(--glass-bg);
+        border: 1px solid var(--glass-border);
+        border-radius: 20px;
+        backdrop-filter: blur(16px);
+        overflow: hidden;
+        box-shadow: var(--glass-shadow);
+        margin-top: 1.5rem;
+      }
+      .weather-table {
+        width: 100%;
+        border-collapse: collapse;
+        color: white;
+        font-size: 0.88rem;
+      }
+      .weather-table thead tr {
+        background: rgba(100, 223, 223, 0.12);
+        border-bottom: 1px solid var(--glass-border);
+      }
+      .weather-table thead th {
+        padding: 16px 12px;
+        font-weight: 600;
+        letter-spacing: 0.5px;
+        color: var(--accent);
+        font-size: 0.78rem;
+        text-transform: uppercase;
+        white-space: nowrap;
+      }
+      .weather-table tbody tr {
+        border-bottom: 1px solid rgba(255,255,255,0.06);
+        transition: background 0.25s ease;
+      }
+      .weather-table tbody tr:last-child { border-bottom: none; }
+      .weather-table tbody tr:hover { background: rgba(255,255,255,0.08); }
+      .weather-table td, .weather-table th[scope="row"] {
+        padding: 14px 12px;
+        vertical-align: middle;
+        text-align: center;
+      }
+      .weather-table th[scope="row"] {
+        font-weight: 600;
+        font-size: 0.95rem;
+        text-align: left;
+        padding-left: 20px;
+        color: white;
+      }
+      .weather-table th[scope="row"]::before { content: '📍'; margin-right: 8px; font-size: 0.8rem; }
+      .weather-table td { color: var(--text-secondary); }
+
+      /* Fade-in animation */
+      .fade-in { animation: fadeInUp 0.6s ease both; }
+      .fade-in:nth-child(1) { animation-delay: 0.1s; }
+      .fade-in:nth-child(2) { animation-delay: 0.2s; }
+      .fade-in:nth-child(3) { animation-delay: 0.3s; }
+      @keyframes fadeInUp {
+        from { opacity: 0; transform: translateY(30px); }
+        to   { opacity: 1; transform: translateY(0); }
+      }
+
+      .footer {
+        text-align: center;
+        color: var(--text-secondary);
+        font-size: 0.8rem;
+        margin-top: 3rem;
+        padding-bottom: 1rem;
+      }
+
+      @media (max-width: 768px) {
+        .weather-table { font-size: 0.78rem; }
+        .weather-table thead th,
+        .weather-table td,
+        .weather-table th[scope="row"] { padding: 10px 8px; }
+      }
+    </style>
   </head>
-  
-  <body class="bg-success">
-    <br>
-    
-    <!-- <nav class="navbar navbar-expand-lg bg-body-tertiary">
-      <div class="container-fluid">
-        <a class="navbar-brand" href="#">Weather App</a>
-        <button
-          class="navbar-toggler"
-          type="button"
-          data-bs-toggle="collapse"
-          data-bs-target="#navbarSupportedContent"
-          aria-controls="navbarSupportedContent"
-          aria-expanded="false"
-          aria-label="Toggle navigation"
-        >
-          <span class="navbar-toggler-icon"></span>
-        </button>
-        <div class="collapse navbar-collapse" id="navbarSupportedContent">
-          <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-            <li class="nav-item">
-              <a class="nav-link active" aria-current="page" href="#">Home</a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link" href="#">About this app</a>
-            </li>
-            <li class="nav-item dropdown">
-              <a
-                class="nav-link dropdown-toggle"
-                href="#"
-                role="button"
-                data-bs-toggle="dropdown"
-                aria-expanded="false"
-              >
-              </a>
-              <ul class="dropdown-menu">
-                <li><a class="dropdown-item" href="#">Delhi</a></li>
-                <li><a class="dropdown-item" href="#">Mumbai</a></li>
-                <li>
-                  <hr class="dropdown-divider" />
-                </li>
-                <li><a class="dropdown-item" href="#">Bangalore</a></li>
-              </ul>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link">Usage guide</a>
-            </li>
-          </ul>
-          <form class="d-flex" role="search">
-            <input id="city"
-              class="form-control me-2"
-              type="search"
-              placeholder="Search"
-              aria-label="Search"
-            />
-            <button class="btn btn-outline-success" type="submit" id="submit">
-              Search
-            </button>
-          </form>
-        </div> 
-      </div>
-    </nav> -->
- 
+
+  <body>
+    <div class="stars" id="stars"></div>
+
     <div class="container">
-      <form class="d-flex" role="search">
-        <input id="city"
-          class="form-control me-3"
-          type="search"
-          placeholder="Search for any city's temperature"
-          aria-label="Search"
-        />
-        <button class="btn btn-outline-success" type="submit" id="submit">
-          Search 
-        </button>
-      </form>
-      
-      <h1 class="my-4 text-center text-opacity-75"><img class="shadow-none" width="110" height="90" src="weather-app.png " alt="Girlt"> Weather of <span id="cityName"></span></h1>
+
+      <!-- Search -->
+      <div class="search-wrapper">
+        <input id="city" type="search" placeholder="🔍  Search for any city..." aria-label="Search" />
+        <button id="submit" type="submit">Search</button>
+      </div>
+
+      <!-- Title -->
+      <h1 class="weather-title">
+        <img width="80" height="70" src="weather-app.png" alt="Weather Icon">
+        Weather of <span id="cityName">—</span>
+      </h1>
+
       <main>
-        <div class="row row-cols-1 row-cols-md-3 mb-3 text-center">
-          <div class="col">
-            <div class="card mb-4 rounded-3 shadow-sm bg-button">
-              <div class="card-header py-3 bg-body-emphasis">
-                <h4 class="my-0 fw-normal ">Temperature info.</h4>
+        <!-- 3 Cards -->
+        <div class="row row-cols-1 row-cols-md-3 mb-3 g-4">
+
+          <div class="col fade-in">
+            <div class="glass-card card-temp">
+              <div class="card-header-custom">
+                <span class="card-icon">🌡️</span>
+                <h4>Temperature</h4>
               </div>
-              <div class="card-body">
-                <h1 class="card-title pricing-card-title">
-                  <span id="temp1"></span><small class="text-muted fw-light"> <span>&#8451;</span></small>
-                </h1>
-                <ul class="list-unstyled mt-3 mb-4">
-                  <li>Temperature is <span id="temp"></span></li>
-                  <li>Feels like <span id="feels_like"></span></li>
-                <br>
+              <div class="card-body-custom">
+                <div class="big-value"><span id="temp1">—</span><small> °C</small></div>
+                <ul class="info-list">
+                  <li><span>Temperature</span><strong><span id="temp">—</span> °C</strong></li>
+                  <li><span>Feels like</span><strong><span id="feels_like">—</span> °C</strong></li>
                 </ul>
-                <form target="_blank">
-
-                <button onclick="window.open(href='https://weather.com/'); " type="button"
-                class="w-100 btn btn-lg btn-outline-primary" target="_blank">
-                  More info.
-
-                
-                </button>
-                </form>
+                <button class="more-btn" onclick="window.open('https://weather.com/')">More info →</button>
               </div>
             </div>
           </div>
-          <div class="col">
-            <div class="card mb-4 rounded-3 shadow-sm bg-button">
-              <div class="card-header py-3">
-                <h4 class="my-0 fw-normal">Humidity info.</h4>
-              </div>
-              <div class="card-body">
-                <h1 class="card-title pricing-card-title">
-                  <span id="humidity1"></span><small class="text-muted fw-light"> %</small>
-                </h1>
-                <ul class="list-unstyled mt-3 mb-4">
-                  <li>Humidity is <span id="humidity"></span></li>
-                  <li>Maximum temperature is <span id="max_temp"></span></li>
-                  <li>Minimum temperature is <span id="min_temp"></span></li>
 
-                </ul>
-                <!-- <button type="button" class="w-100 btn btn-lg btn-primary">
-                  Get started
-                </button> -->
-                <button onclick="window.open(href='https://weather.com/');" type="button"
-                class="w-100 btn btn-lg btn-outline-primary" target="_blank">
-                  More info.
-                
-                
-                </button>
+          <div class="col fade-in">
+            <div class="glass-card card-humidity">
+              <div class="card-header-custom">
+                <span class="card-icon">💧</span>
+                <h4>Humidity</h4>
               </div>
-            </div> 
-          </div>
-          <div class="col">
-            <div class="card mb-4 rounded-3 shadow-sm bg-button">
-              <!-- <div class="card-header py-3 text-bg-primary border-primary">
-                <h4 class="my-0 fw-normal">Wind info</h4>
-              </div> -->
-              <div class="card-header py-3">
-                <h4 class="my-0 fw-normal">Wind info.</h4>
-              </div>
-              <div class="card-body">
-                <h1 class="card-title pricing-card-title" >
-                  <span id="wind_speed1"></span><small class="text-muted fw-light"> Km/hr</small>
-                </h1>
-                <ul class="list-unstyled mt-3 mb-4">
-                  
-                  <li>Wind speed is <span id="wind_speed"></span></li>
-                  <!-- <li>Sunrise is <span id="sunrise"></span></li> -->
-                  <li>Wind degree is <span id="wind_degrees"></span></li>
-                  <li>Sunset is <span id="sunset"></span></li>
+              <div class="card-body-custom">
+                <div class="big-value"><span id="humidity1">—</span><small> %</small></div>
+                <ul class="info-list">
+                  <li><span>Humidity</span><strong><span id="humidity">—</span> %</strong></li>
+                  <li><span>Max temperature</span><strong><span id="max_temp">—</span> °C</strong></li>
+                  <li><span>Min temperature</span><strong><span id="min_temp">—</span> °C</strong></li>
                 </ul>
-                <button onclick="window.open(href='https://weather.com/');" type="button"
-                class="w-100 btn btn-lg btn-outline-primary" target="_blank">
-                  More info.
-                
-                
-                </button>
+                <button class="more-btn" onclick="window.open('https://weather.com/')">More info →</button>
               </div>
             </div>
+          </div>
+
+          <div class="col fade-in">
+            <div class="glass-card card-wind">
+              <div class="card-header-custom">
+                <span class="card-icon">🌬️</span>
+                <h4>Wind</h4>
+              </div>
+              <div class="card-body-custom">
+                <div class="big-value"><span id="wind_speed1">—</span><small> m/s</small></div>
+                <ul class="info-list">
+                  <li><span>Wind speed</span><strong><span id="wind_speed">—</span> m/s</strong></li>
+                  <li><span>Wind degree</span><strong><span id="wind_degrees">—</span>°</strong></li>
+                  <li><span>Sunset</span><strong><span id="sunset">—</span></strong></li>
+                </ul>
+                <button class="more-btn" onclick="window.open('https://weather.com/')">More info →</button>
+              </div>
+            </div>
+          </div>
+
+        </div>
+
+        <!-- Table -->
+        <h2 class="section-title">Weather of Other Cities</h2>
+
+        <div class="table-wrapper">
+          <div class="table-responsive">
+            <table class="weather-table">
+              <thead>
+                <tr>
+                  <th style="text-align:left; padding-left:20px;">City</th>
+                  <th>Temp (°C)</th>
+                  <th>Feels Like (°C)</th>
+                  <th>Humidity (%)</th>
+                  <th>Max °C</th>
+                  <th>Min °C</th>
+                  <th>Wind (m/s)</th>
+                  <th>Wind °</th>
+                  <th>Sunset</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <th scope="row">Mumbai</th>
+                  <td><span id="temp2">—</span></td>
+                  <td><span id="feels_like2">—</span></td>
+                  <td><span id="humidity2">—</span></td>
+                  <td><span id="max_temp3">—</span></td>
+                  <td><span id="min_temp2">—</span></td>
+                  <td><span id="wind_speed2">—</span></td>
+                  <td><span id="wind_degrees2">—</span></td>
+                  <td><span id="sunset2">—</span></td>
+                </tr>
+                <tr>
+                  <th scope="row">New Delhi</th>
+                  <td><span id="temp3">—</span></td>
+                  <td><span id="feels_like3">—</span></td>
+                  <td><span id="humidity3">—</span></td>
+                  <td><span id="max_temp4">—</span></td>
+                  <td><span id="min_temp3">—</span></td>
+                  <td><span id="wind_speed3">—</span></td>
+                  <td><span id="wind_degrees3">—</span></td>
+                  <td><span id="sunset3">—</span></td>
+                </tr>
+                <tr>
+                  <th scope="row">Kolkata</th>
+                  <td><span id="temp4">—</span></td>
+                  <td><span id="feels_like4">—</span></td>
+                  <td><span id="humidity4">—</span></td>
+                  <td><span id="max_temp5">—</span></td>
+                  <td><span id="min_temp4">—</span></td>
+                  <td><span id="wind_speed4">—</span></td>
+                  <td><span id="wind_degrees4">—</span></td>
+                  <td><span id="sunset4">—</span></td>
+                </tr>
+                <tr>
+                  <th scope="row">Mysore</th>
+                  <td><span id="temp5">—</span></td>
+                  <td><span id="feels_like5">—</span></td>
+                  <td><span id="humidity5">—</span></td>
+                  <td><span id="max_temp6">—</span></td>
+                  <td><span id="min_temp5">—</span></td>
+                  <td><span id="wind_speed5">—</span></td>
+                  <td><span id="wind_degrees5">—</span></td>
+                  <td><span id="sunset5">—</span></td>
+                </tr>
+                <tr>
+                  <th scope="row">Pune</th>
+                  <td><span id="temp6">—</span></td>
+                  <td><span id="feels_like6">—</span></td>
+                  <td><span id="humidity6">—</span></td>
+                  <td><span id="max_temp7">—</span></td>
+                  <td><span id="min_temp6">—</span></td>
+                  <td><span id="wind_speed6">—</span></td>
+                  <td><span id="wind_degrees6">—</span></td>
+                  <td><span id="sunset6">—</span></td>
+                </tr>
+                <tr>
+                  <th scope="row">Bangalore</th>
+                  <td><span id="temp7">—</span></td>
+                  <td><span id="feels_like7">—</span></td>
+                  <td><span id="humidity7">—</span></td>
+                  <td><span id="max_temp8">—</span></td>
+                  <td><span id="min_temp7">—</span></td>
+                  <td><span id="wind_speed7">—</span></td>
+                  <td><span id="wind_degrees7">—</span></td>
+                  <td><span id="sunset7">—</span></td>
+                </tr>
+              </tbody>
+            </table>
           </div>
         </div>
 
-        <h2 class="display-6 text-center mb-4">
-          Weather of other common places
-        </h2>
-        <hr>
-        <div class="table-responsive">
-          <table class="table text-center">
-            <thead>
-              <tr>
-                <th style="width: 90%"></th>
-                <!-- <th style="width: 25%">Cloud_pct</th> -->
-                <th style="width: 25%">Temp</th>
-                <th style="width: 25%">Feels_like</th>
-                <th style="width: 25%">Humidity</th>
-                <th style="width: 25%">Max_temp</th>
-                <th style="width: 25%">Min_temp</th>
-                <!-- <th style="width: 25%">Sunrise</th> -->
-                <th style="width: 25%">Wind_speed</th>
-                <th style="width: 25%">Wind_degrees</th>
-                <th style="width: 25%">Sunset</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr>
-                <th scope="row" class="bg-button"><span id="cityName1"></span> Mumbai</th>
-                
-                <td><span id="temp2"></span></td>
-                <td><span id="feels_like2"></span></td>
-                <td><span id="humidity2"></span></td>
-                <td><span id="max_temp3"></span></td>
-                <td><span id="min_temp2"></span></td>
-                <td><span id="wind_speed2"></span></td>
-                <td><span id="wind_degrees2"></span></td>
-                <td><span id="sunset2"></span></td>
-                <!-- <td>9</td> -->
-                <!-- <td>0</td> -->
-                
-              </tr>
-              <tr>
-                <th scope="row" class="bg-button"><span id="cityName2"></span> New Delhi </th>
-                <td><span id="temp3"></span></td>
-                <td><span id="feels_like3"></span></td>
-                <td><span id="humidity3"></span></td>
-                <td><span id="max_temp4"></span></td>
-                <td><span id="min_temp3"></span></td>
-                <td><span id="wind_speed3"></span></td>
-                <td><span id="wind_degrees3"></span></td>
-                <td><span id="sunset3"></span></td>
-                <!-- <td>9</td> -->
-                <!-- <td>0</td> -->
-              </tr>
-            </tbody>
-
-            <tbody>
-              <tr>
-                <th scope="row" class="bg-button"><span id="cityName3"></span> Kolkata</th>
-                <td><span id="temp4"></span></td>
-                <td><span id="feels_like4"></span></td>
-                <td><span id="humidity4"></span></td>
-                <td><span id="max_temp5"></span></td>
-                <td><span id="min_temp4"></span></td>
-                <td><span id="wind_speed4"></span></td>
-                <td><span id="wind_degrees4"></span></td>
-                <td><span id="sunset4"></span></td>
-                <!-- <td>9</td> -->
-                <!-- <td>0</td> -->
-              </tr>
-              <tr>
-                <th scope="row" class="bg-button"><span id="cityName4"></span> Mysore</th>
-                <td><span id="temp5"></span></td>
-                <td><span id="feels_like5"></span></td>
-                <td><span id="humidity5"></span></td>
-                <td><span id="max_temp6"></span></td>
-                <td><span id="min_temp5"></span></td>
-                <td><span id="wind_speed5"></span></td>
-                <td><span id="wind_degrees5"></span></td>
-                <td><span id="sunset5"></span></td>
-                <!-- <td>9</td> -->
-                <!-- <td>0</td> -->
-              </tr>
-              <tr>
-                <th scope="row" class="bg-button"><span id="cityName5"></span> Pune</th>
-                <td><span id="temp6"></span></td>
-                <td><span id="feels_like6"></span></td>
-                <td><span id="humidity6"></span></td>
-                <td><span id="max_temp7"></span></td>
-                <td><span id="min_temp6"></span></td>
-                <td><span id="wind_speed6"></span></td>
-                <td><span id="wind_degrees6"></span></td>
-                <td><span id="sunset6"></span></td>
-                <!-- <td>9</td> -->
-                <!-- <td>0</td> -->
-              </tr>
-              <tr>
-                <th scope="row" class="bg-button"><span id="cityName6"></span> Bangalore</th>
-                <td><span id="temp7"></span></td>
-                <td><span id="feels_like7"></span></td>
-                <td><span id="humidity7"></span></td>
-                <td><span id="max_temp8"></span></td>
-                <td><span id="min_temp7"></span></td>
-                <td><span id="wind_speed7"></span></td>
-                <td><span id="wind_degrees7"></span></td>
-                <td><span id="sunset7"></span></td>
-                
-              </tr>
-            </tbody>
-          </table>
+        <div class="footer">
+          <p>Powered by OpenWeatherMap &nbsp;·&nbsp; Data updates on search</p>
         </div>
       </main>
     </div>
 
-    <script
-      src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"
       integrity="sha384-w76AqPfDkMBDXo30jS1Sgez6pr3x5MlQ1ZAGC+nuZB+EYdgRZgiwxhTBTkF7CXvN"
-      crossorigin="anonymous"
-    ></script>
+      crossorigin="anonymous"></script>
+
+    <script>
+      // Generate twinkling stars
+      const starsContainer = document.getElementById('stars');
+      for (let i = 0; i < 80; i++) {
+        const star = document.createElement('div');
+        star.classList.add('star');
+        const size = Math.random() * 2.5 + 0.5;
+        star.style.cssText = `
+          width:${size}px; height:${size}px;
+          top:${Math.random()*100}%; left:${Math.random()*100}%;
+          animation-delay:${Math.random()*4}s;
+          animation-duration:${2+Math.random()*3}s;
+        `;
+        starsContainer.appendChild(star);
+      }
+    </script>
+
     <script src="script.js"></script>
   </body>
 </html>
