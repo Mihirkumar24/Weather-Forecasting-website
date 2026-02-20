@@ -1,8 +1,9 @@
 const options = {
   method: "GET",
   headers: {
-    "X-RapidAPI-Key": "0ddaeb87b8msheccd80bd0038969p195994jsnd6b1b4e2fcf9",
-    "X-RapidAPI-Host": "weather-by-api-ninjas.p.rapidapi.com",
+    // "X-RapidAPI-Key": "0ddaeb87b8msheccd80bd0038969p195994jsnd6b1b4e2fcf9",
+    "X-RapidAPI-Key": "d6cc65f12112edcf4321e182003112db",
+    "X-RapidAPI-Host": "http://api.openweathermap.org/geo/1.0/direct",
   },
 };
 
@@ -212,6 +213,7 @@ const getWeather = (city) => {
 
   // };
   // }
+
 
 
 
