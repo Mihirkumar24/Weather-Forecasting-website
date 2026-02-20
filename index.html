@@ -55,26 +55,13 @@
         bottom: -100px; right: -100px;
         animation-delay: -6s;
       }
-
       @keyframes float {
         0%   { transform: translate(0, 0) scale(1); }
         100% { transform: translate(40px, 40px) scale(1.1); }
       }
 
-      .stars {
-        position: fixed;
-        top: 0; left: 0;
-        width: 100%; height: 100%;
-        pointer-events: none;
-        z-index: 0;
-        overflow: hidden;
-      }
-      .star {
-        position: absolute;
-        background: white;
-        border-radius: 50%;
-        animation: twinkle 3s ease-in-out infinite;
-      }
+      .stars { position: fixed; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; z-index: 0; overflow: hidden; }
+      .star { position: absolute; background: white; border-radius: 50%; animation: twinkle 3s ease-in-out infinite; }
       @keyframes twinkle {
         0%, 100% { opacity: 0.2; transform: scale(1); }
         50%       { opacity: 1;   transform: scale(1.4); }
@@ -83,11 +70,7 @@
       .container { position: relative; z-index: 1; padding-top: 2rem; padding-bottom: 3rem; }
 
       /* Search */
-      .search-wrapper {
-        max-width: 600px;
-        margin: 0 auto 2.5rem;
-        position: relative;
-      }
+      .search-wrapper { max-width: 600px; margin: 0 auto 2.5rem; position: relative; }
       .search-wrapper input {
         background: rgba(255,255,255,0.12);
         border: 1.5px solid var(--glass-border);
@@ -108,76 +91,40 @@
         box-shadow: 0 0 0 3px rgba(100, 223, 223, 0.2);
       }
       .search-wrapper button {
-        position: absolute;
-        right: 6px; top: 6px; bottom: 6px;
+        position: absolute; right: 6px; top: 6px; bottom: 6px;
         background: linear-gradient(135deg, var(--accent), #48cae4);
-        border: none;
-        border-radius: 50px;
-        padding: 0 28px;
-        color: #0f2027;
-        font-weight: 700;
-        font-family: 'Outfit', sans-serif;
-        font-size: 0.9rem;
-        cursor: pointer;
-        transition: all 0.3s ease;
-        letter-spacing: 0.5px;
+        border: none; border-radius: 50px; padding: 0 28px;
+        color: #0f2027; font-weight: 700; font-family: 'Outfit', sans-serif;
+        font-size: 0.9rem; cursor: pointer; transition: all 0.3s ease; letter-spacing: 0.5px;
       }
-      .search-wrapper button:hover {
-        transform: scale(1.05);
-        box-shadow: 0 4px 20px rgba(100,223,223,0.5);
-      }
+      .search-wrapper button:hover { transform: scale(1.05); box-shadow: 0 4px 20px rgba(100,223,223,0.5); }
 
       /* Title */
       .weather-title {
         font-family: 'Playfair Display', serif;
         font-size: clamp(2rem, 5vw, 3.2rem);
-        text-align: center;
-        margin-bottom: 2.5rem;
-        color: white;
+        text-align: center; margin-bottom: 2.5rem; color: white;
         text-shadow: 0 2px 20px rgba(0,0,0,0.4);
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        gap: 16px;
-        flex-wrap: wrap;
+        display: flex; align-items: center; justify-content: center; gap: 16px; flex-wrap: wrap;
       }
       .weather-title img { filter: drop-shadow(0 4px 10px rgba(0,0,0,0.3)); }
       .weather-title span { color: var(--accent); }
 
       /* Glass Cards */
       .glass-card {
-        background: var(--glass-bg);
-        border: 1px solid var(--glass-border);
-        border-radius: 24px;
-        backdrop-filter: blur(16px);
-        -webkit-backdrop-filter: blur(16px);
-        box-shadow: var(--glass-shadow);
-        overflow: hidden;
-        transition: transform 0.3s ease, box-shadow 0.3s ease, background 0.3s ease;
-        height: 100%;
+        background: var(--glass-bg); border: 1px solid var(--glass-border);
+        border-radius: 24px; backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px);
+        box-shadow: var(--glass-shadow); overflow: hidden;
+        transition: transform 0.3s ease, box-shadow 0.3s ease, background 0.3s ease; height: 100%;
       }
-      .glass-card:hover {
-        transform: translateY(-6px);
-        background: var(--card-hover);
-        box-shadow: 0 16px 48px rgba(0,0,0,0.4);
-      }
+      .glass-card:hover { transform: translateY(-6px); background: var(--card-hover); box-shadow: 0 16px 48px rgba(0,0,0,0.4); }
 
       .card-header-custom {
-        padding: 18px 24px;
-        border-bottom: 1px solid var(--glass-border);
-        display: flex;
-        align-items: center;
-        gap: 10px;
+        padding: 18px 24px; border-bottom: 1px solid var(--glass-border);
+        display: flex; align-items: center; gap: 10px;
       }
       .card-icon { font-size: 1.6rem; line-height: 1; }
-      .card-header-custom h4 {
-        font-size: 1rem;
-        font-weight: 600;
-        letter-spacing: 1px;
-        text-transform: uppercase;
-        color: var(--text-secondary);
-        margin: 0;
-      }
+      .card-header-custom h4 { font-size: 1rem; font-weight: 600; letter-spacing: 1px; text-transform: uppercase; color: var(--text-secondary); margin: 0; }
 
       .card-temp .card-header-custom     { background: linear-gradient(135deg, rgba(100,223,223,0.15), transparent); }
       .card-humidity .card-header-custom { background: linear-gradient(135deg, rgba(72,202,228,0.15), transparent); }
@@ -185,12 +132,7 @@
 
       .card-body-custom { padding: 24px; }
 
-      .big-value {
-        font-size: clamp(2.8rem, 6vw, 4rem);
-        font-weight: 700;
-        line-height: 1;
-        margin-bottom: 4px;
-      }
+      .big-value { font-size: clamp(2.8rem, 6vw, 4rem); font-weight: 700; line-height: 1; margin-bottom: 4px; }
       .big-value small { font-size: 1.2rem; font-weight: 300; color: var(--text-secondary); }
       .card-temp .big-value     { color: var(--accent); }
       .card-humidity .big-value { color: #48cae4; }
@@ -198,27 +140,18 @@
 
       .info-list { list-style: none; padding: 0; margin: 16px 0 20px; }
       .info-list li {
-        color: var(--text-secondary);
-        font-size: 0.9rem;
-        padding: 6px 0;
+        color: var(--text-secondary); font-size: 0.9rem; padding: 6px 0;
         border-bottom: 1px solid rgba(255,255,255,0.06);
-        display: flex;
-        justify-content: space-between;
+        display: flex; justify-content: space-between;
       }
       .info-list li:last-child { border-bottom: none; }
       .info-list li strong { color: white; font-weight: 500; }
 
       .more-btn {
-        display: block; width: 100%; padding: 12px;
-        border-radius: 50px;
-        border: 1.5px solid var(--glass-border);
-        background: transparent;
-        color: white;
-        font-family: 'Outfit', sans-serif;
-        font-size: 0.9rem; font-weight: 500;
-        cursor: pointer;
-        transition: all 0.3s ease;
-        letter-spacing: 0.5px;
+        display: block; width: 100%; padding: 12px; border-radius: 50px;
+        border: 1.5px solid var(--glass-border); background: transparent; color: white;
+        font-family: 'Outfit', sans-serif; font-size: 0.9rem; font-weight: 500;
+        cursor: pointer; transition: all 0.3s ease; letter-spacing: 0.5px;
       }
       .card-temp .more-btn:hover     { background: rgba(100,223,223,0.2); border-color: var(--accent); color: var(--accent); }
       .card-humidity .more-btn:hover { background: rgba(72,202,228,0.2); border-color: #48cae4; color: #48cae4; }
@@ -226,73 +159,32 @@
 
       /* Section title */
       .section-title {
-        font-family: 'Playfair Display', serif;
-        font-size: clamp(1.5rem, 3vw, 2rem);
-        text-align: center;
-        color: white;
-        margin: 3rem 0 1rem;
-        position: relative;
+        font-family: 'Playfair Display', serif; font-size: clamp(1.5rem, 3vw, 2rem);
+        text-align: center; color: white; margin: 3rem 0 1rem; position: relative;
       }
       .section-title::after {
-        content: '';
-        display: block;
-        width: 60px; height: 3px;
+        content: ''; display: block; width: 60px; height: 3px;
         background: linear-gradient(90deg, var(--accent), #48cae4);
-        border-radius: 2px;
-        margin: 12px auto 0;
+        border-radius: 2px; margin: 12px auto 0;
       }
 
       /* Table */
       .table-wrapper {
-        background: var(--glass-bg);
-        border: 1px solid var(--glass-border);
-        border-radius: 20px;
-        backdrop-filter: blur(16px);
-        overflow: hidden;
-        box-shadow: var(--glass-shadow);
-        margin-top: 1.5rem;
+        background: var(--glass-bg); border: 1px solid var(--glass-border);
+        border-radius: 20px; backdrop-filter: blur(16px); overflow: hidden;
+        box-shadow: var(--glass-shadow); margin-top: 1.5rem;
       }
-      .weather-table {
-        width: 100%;
-        border-collapse: collapse;
-        color: white;
-        font-size: 0.88rem;
-      }
-      .weather-table thead tr {
-        background: rgba(100, 223, 223, 0.12);
-        border-bottom: 1px solid var(--glass-border);
-      }
-      .weather-table thead th {
-        padding: 16px 12px;
-        font-weight: 600;
-        letter-spacing: 0.5px;
-        color: var(--accent);
-        font-size: 0.78rem;
-        text-transform: uppercase;
-        white-space: nowrap;
-      }
-      .weather-table tbody tr {
-        border-bottom: 1px solid rgba(255,255,255,0.06);
-        transition: background 0.25s ease;
-      }
+      .weather-table { width: 100%; border-collapse: collapse; color: white; font-size: 0.88rem; }
+      .weather-table thead tr { background: rgba(100, 223, 223, 0.12); border-bottom: 1px solid var(--glass-border); }
+      .weather-table thead th { padding: 16px 12px; font-weight: 600; letter-spacing: 0.5px; color: var(--accent); font-size: 0.78rem; text-transform: uppercase; white-space: nowrap; }
+      .weather-table tbody tr { border-bottom: 1px solid rgba(255,255,255,0.06); transition: background 0.25s ease; }
       .weather-table tbody tr:last-child { border-bottom: none; }
       .weather-table tbody tr:hover { background: rgba(255,255,255,0.08); }
-      .weather-table td, .weather-table th[scope="row"] {
-        padding: 14px 12px;
-        vertical-align: middle;
-        text-align: center;
-      }
-      .weather-table th[scope="row"] {
-        font-weight: 600;
-        font-size: 0.95rem;
-        text-align: left;
-        padding-left: 20px;
-        color: white;
-      }
+      .weather-table td, .weather-table th[scope="row"] { padding: 14px 12px; vertical-align: middle; text-align: center; }
+      .weather-table th[scope="row"] { font-weight: 600; font-size: 0.95rem; text-align: left; padding-left: 20px; color: white; }
       .weather-table th[scope="row"]::before { content: '📍'; margin-right: 8px; font-size: 0.8rem; }
       .weather-table td { color: var(--text-secondary); }
 
-      /* Fade-in animation */
       .fade-in { animation: fadeInUp 0.6s ease both; }
       .fade-in:nth-child(1) { animation-delay: 0.1s; }
       .fade-in:nth-child(2) { animation-delay: 0.2s; }
@@ -302,19 +194,11 @@
         to   { opacity: 1; transform: translateY(0); }
       }
 
-      .footer {
-        text-align: center;
-        color: var(--text-secondary);
-        font-size: 0.8rem;
-        margin-top: 3rem;
-        padding-bottom: 1rem;
-      }
+      .footer { text-align: center; color: var(--text-secondary); font-size: 0.8rem; margin-top: 3rem; padding-bottom: 1rem; }
 
       @media (max-width: 768px) {
         .weather-table { font-size: 0.78rem; }
-        .weather-table thead th,
-        .weather-table td,
-        .weather-table th[scope="row"] { padding: 10px 8px; }
+        .weather-table thead th, .weather-table td, .weather-table th[scope="row"] { padding: 10px 8px; }
       }
     </style>
   </head>
@@ -327,7 +211,7 @@
       <!-- Search -->
       <div class="search-wrapper">
         <input id="city" type="search" placeholder="🔍  Search for any city..." aria-label="Search" />
-        <button id="submit" type="submit">Search</button>
+        <button id="submit" type="button">Search</button>
       </div>
 
       <!-- Title -->
@@ -337,9 +221,9 @@
       </h1>
 
       <main>
-        <!-- 3 Cards -->
         <div class="row row-cols-1 row-cols-md-3 mb-3 g-4">
 
+          <!-- Temperature Card -->
           <div class="col fade-in">
             <div class="glass-card card-temp">
               <div class="card-header-custom">
@@ -347,8 +231,10 @@
                 <h4>Temperature</h4>
               </div>
               <div class="card-body-custom">
+                <!-- big-value unit label is hardcoded: °C -->
                 <div class="big-value"><span id="temp1">—</span><small> °C</small></div>
                 <ul class="info-list">
+                  <!-- NO unit text here — JS fills the span with just a number -->
                   <li><span>Temperature</span><strong><span id="temp">—</span> °C</strong></li>
                   <li><span>Feels like</span><strong><span id="feels_like">—</span> °C</strong></li>
                 </ul>
@@ -357,6 +243,7 @@
             </div>
           </div>
 
+          <!-- Humidity Card -->
           <div class="col fade-in">
             <div class="glass-card card-humidity">
               <div class="card-header-custom">
@@ -375,6 +262,7 @@
             </div>
           </div>
 
+          <!-- Wind Card -->
           <div class="col fade-in">
             <div class="glass-card card-wind">
               <div class="card-header-custom">
@@ -497,18 +385,13 @@
       crossorigin="anonymous"></script>
 
     <script>
-      // Generate twinkling stars
+      // Twinkling stars
       const starsContainer = document.getElementById('stars');
       for (let i = 0; i < 80; i++) {
         const star = document.createElement('div');
         star.classList.add('star');
         const size = Math.random() * 2.5 + 0.5;
-        star.style.cssText = `
-          width:${size}px; height:${size}px;
-          top:${Math.random()*100}%; left:${Math.random()*100}%;
-          animation-delay:${Math.random()*4}s;
-          animation-duration:${2+Math.random()*3}s;
-        `;
+        star.style.cssText = `width:${size}px;height:${size}px;top:${Math.random()*100}%;left:${Math.random()*100}%;animation-delay:${Math.random()*4}s;animation-duration:${2+Math.random()*3}s;`;
         starsContainer.appendChild(star);
       }
     </script>
